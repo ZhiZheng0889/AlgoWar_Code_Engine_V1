@@ -161,9 +161,3 @@ If you're using Windows, you can use Windows Subsystem for Linux (WSL2). Here's 
   docker-compose up --build
   ```
 
-## Conclusion
-
-You now have Piston set up and running on Ubuntu! If you encounter any issues or need further assistance, feel free to explore the [Piston GitHub Repository](https://github.com/engineer-man/piston) for more information and troubleshooting.
-```
-
-This `README.md` file includes all necessary steps to set up Ubuntu, Docker, Docker Compose, and Piston, as well as solutions for common issues. Let me know if you'd like any further modifications or adjustments!
