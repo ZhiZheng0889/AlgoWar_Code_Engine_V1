@@ -1,162 +1,173 @@
-# Setting Up Ubuntu and Piston Code Execution Engine
+Here's an updated version of the `README.md` file with steps for setting up Ubuntu and Piston. The instructions cover setting up the environment, installing Docker, setting up Piston, and handling common issues like file permissions and Docker conflicts.
 
-This guide provides the steps for setting up a code execution engine using Piston on Ubuntu.
+### `README.md`
+
+```markdown
+# Piston Setup on Ubuntu
+
+This guide provides instructions on how to set up Ubuntu and Piston, a code execution engine, using Docker. Follow the steps below to install dependencies, configure Docker, and run Piston.
 
 ## Prerequisites
 
-- Docker installed on Ubuntu
-- Docker Compose installed
+Before starting, ensure you have the following:
 
-## Step 1: Install Docker
+- Ubuntu installed (either as your primary OS, in a virtual machine, or via WSL2 on Windows)
+- Admin/root access
+- Basic knowledge of using the terminal
 
-If Docker is not already installed on your Ubuntu system, follow these steps:
+## 1. Setting Up Ubuntu
 
-1. **Update the apt package index**:
+If you're using Windows, you can use Windows Subsystem for Linux (WSL2). Here's how to set it up:
 
-   ```bash
-   sudo apt update
-   ```
+1. **Install WSL2**:
+   - Open PowerShell as an administrator and run:
+     ```bash
+     wsl --install
+     ```
+   - Reboot your machine if necessary.
 
-2. **Install required packages**:
-   ```bash
-   sudo apt install apt-transport-https ca-certificates curl software-properties-common
-   ```
+2. **Install Ubuntu**:
+   - After WSL2 is set up, install Ubuntu from the Microsoft Store or via:
+     ```bash
+     wsl --install -d Ubuntu
+     ```
+   - Open Ubuntu and create your user account.
 
-3. **Add Docker’s official GPG key**:
-   ```bash
-   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-   ```
+3. **Update Ubuntu Packages**:
+   - Open your Ubuntu terminal and run the following to update and upgrade packages:
+     ```bash
+     sudo apt update && sudo apt upgrade -y
+     ```
 
-4. **Add the Docker repository to apt sources**:
-   ```bash
-   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-   ```
+## 2. Installing Docker and Docker Compose
 
-5. **Update the package index again**:
-   ```bash
-   sudo apt update
-   ```
+### 2.1. Install Docker
 
-6. **Install Docker**:
-   ```bash
-   sudo apt install docker-ce
-   ```
+1. **Install Docker**:
+   - Run the following commands to install Docker:
+     ```bash
+     sudo apt-get update
+     sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+     sudo apt-get update
+     sudo apt-get install docker-ce
+     ```
 
-7. **Verify Docker installation**:
-   ```bash
-   docker --version
-   ```
+2. **Start Docker**:
+   - Ensure Docker is running by starting the service:
+     ```bash
+     sudo systemctl start docker
+     sudo systemctl enable docker
+     ```
 
-## Step 2: Install Docker Compose
+3. **Check Docker Version**:
+   - Confirm Docker is installed by checking the version:
+     ```bash
+     docker --version
+     ```
 
-1. **Download the Docker Compose binary**:
-   ```bash
-   sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-   ```
+### 2.2. Install Docker Compose
 
-2. **Apply executable permissions to the binary**:
-   ```bash
-   sudo chmod +x /usr/local/bin/docker-compose
-   ```
+1. **Install Docker Compose**:
+   - Run the following commands to install Docker Compose:
+     ```bash
+     sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+     sudo chmod +x /usr/local/bin/docker-compose
+     ```
 
-3. **Verify Docker Compose installation**:
-   ```bash
-   docker-compose --version
-   ```
+2. **Check Docker Compose Version**:
+   - Verify Docker Compose is installed by running:
+     ```bash
+     docker-compose --version
+     ```
 
-## Step 3: Set Up Piston
+## 3. Cloning the Piston Repository
 
-1. **Clone the Piston repository**:
-   ```bash
-   git clone https://github.com/engineer-man/piston.git
-   ```
+1. **Clone the Piston Repo**:
+   - Clone the Piston repository from GitHub:
+     ```bash
+     git clone https://github.com/engineer-man/piston.git ~/piston_project
+     ```
 
-2. **Navigate to the Piston directory**:
-   ```bash
-   cd piston
-   ```
+2. **Navigate to the Project Directory**:
+   - Change into the project directory:
+     ```bash
+     cd ~/piston_project
+     ```
 
-3. **Create the Docker container using Docker Compose**:
-   ```bash
-   docker-compose up -d
-   ```
+## 4. Configuring and Running Piston
 
-4. **Check that the Piston API is running**:
-   ```bash
-   docker logs piston_api
-   ```
+### 4.1. Set Up the Project
 
-   The log should show the API server started on port `2000`.
+1. **Install Dependencies**:
+   - If you're working in the `cli` folder, navigate to it and install dependencies:
+     ```bash
+     cd ~/piston_project/cli
+     npm install
+     ```
 
-## Step 4: Test the API Locally
+2. **Run Piston with Docker Compose**:
+   - Run the following command to build and start the Piston API server:
+     ```bash
+     docker-compose up --build
+     ```
 
-1. **Test the API endpoint**:
-   ```bash
-   curl http://localhost:2000
-   ```
+### 4.2. Handling Common Docker Issues
 
-   You should get a response like:
-   ```json
-   {"message": "Piston v3.1.1"}
-   ```
+- **Permission Errors**:
+  If you encounter permission errors when trying to move or modify files, use the following command to change ownership:
+  ```bash
+  sudo chown -R $USER:$USER ~/piston_project
+  ```
 
-2. **Run a sample Python script using the Piston API**:
-   ```bash
-   curl -X POST http://localhost:2000/api/v2/execute -H "Content-Type: application/json" -d '{
-     "language": "python3",
-     "version": "3.9.4",
-     "files": [{
-       "name": "main.py",
-       "content": "print(\"Hello, world!\")"
-     }]
-   }'
-   ```
+- **Conflicting Containers**:
+  If Docker shows an error about a conflicting container name, you can remove the old container:
+  ```bash
+  docker ps -a  # List all containers
+  docker rm <container_id>  # Remove the conflicting container
+  ```
 
-   The response should include the output of the code execution:
-   ```json
-   {
-     "language": "python3",
-     "version": "3.9.4",
-     "run": {
-       "stdout": "Hello, world!\n",
-       "stderr": "",
-       "output": "Hello, world!\n",
-       "code": 0,
-       "signal": null
-     }
-   }
-   ```
+  Then run Docker Compose again:
+  ```bash
+  docker-compose up --build
+  ```
 
-## Step 5: List Available Languages
+## 5. Running Python Code Using Piston
 
-To see the available runtimes (languages supported by Piston):
+1. **Create a Test Python Script**:
+   - Create a simple Python script named `test.py`:
+     ```bash
+     echo 'print("Hello world!")' > test.py
+     ```
 
-```bash
-curl http://localhost:2000/api/v2/runtimes
-```
+2. **Run the Python Script**:
+   - Run the script using Piston:
+     ```bash
+     node index.js run python test.py
+     ```
 
-This will return a list of all available languages and versions.
+3. **Check API Status**:
+   - If you need to check if the Piston API is running, use:
+     ```bash
+     curl http://localhost:2000
+     ```
 
-## Step 6: Managing Piston
+## 6. Stopping and Restarting Piston
 
-- **Stop Piston API**:
+- **Stop Piston**:
   ```bash
   docker-compose down
   ```
 
-- **Restart the API**:
+- **Restart Piston**:
   ```bash
-  docker-compose up -d
+  docker-compose up --build
   ```
-
-## Optional: Additional Configuration
-
-- If you need to change any configuration, modify the environment variables in the `docker-compose.yml` file or add your own configuration.
-- To integrate this engine with a web interface or another service, you can use the `/execute` endpoint to send code execution requests.
 
 ## Conclusion
 
-You have successfully set up the Piston code execution engine using Docker on Ubuntu. Now you can use the Piston API to run code snippets in various programming languages.
+You now have Piston set up and running on Ubuntu! If you encounter any issues or need further assistance, feel free to explore the [Piston GitHub Repository](https://github.com/engineer-man/piston) for more information and troubleshooting.
 ```
 
-This markdown guide walks through the installation and setup of Piston on Ubuntu, including the necessary tools like Docker and Docker Compose. Let me know if you need further modifications!# AlgoWar_Code_Engine_V1
+This `README.md` file includes all necessary steps to set up Ubuntu, Docker, Docker Compose, and Piston, as well as solutions for common issues. Let me know if you'd like any further modifications or adjustments!
