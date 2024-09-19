@@ -1,8 +1,4 @@
-Here's an updated version of the `README.md` file with steps for setting up Ubuntu and Piston. The instructions cover setting up the environment, installing Docker, setting up Piston, and handling common issues like file permissions and Docker conflicts.
 
-### `README.md`
-
-```markdown
 # Piston Setup on Ubuntu
 
 This guide provides instructions on how to set up Ubuntu and Piston, a code execution engine, using Docker. Follow the steps below to install dependencies, configure Docker, and run Piston.
