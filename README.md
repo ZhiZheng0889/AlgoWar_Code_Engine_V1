@@ -1,6 +1,5 @@
 Here’s a step-by-step guide for setting up Ubuntu and Piston in markdown format:
 
-```markdown
 # Setting Up Ubuntu and Piston Code Execution Engine
 
 This guide provides the steps for setting up a code execution engine using Piston on Ubuntu.
@@ -15,6 +14,7 @@ This guide provides the steps for setting up a code execution engine using Pisto
 If Docker is not already installed on your Ubuntu system, follow these steps:
 
 1. **Update the apt package index**:
+
    ```bash
    sudo apt update
    ```
