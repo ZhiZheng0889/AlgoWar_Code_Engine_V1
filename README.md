@@ -1,5 +1,3 @@
-Here’s a step-by-step guide for setting up Ubuntu and Piston in markdown format:
-
 # Setting Up Ubuntu and Piston Code Execution Engine
 
 This guide provides the steps for setting up a code execution engine using Piston on Ubuntu.
